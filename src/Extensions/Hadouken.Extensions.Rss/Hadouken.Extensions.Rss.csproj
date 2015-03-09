@@ -54,6 +54,7 @@
     <Compile Include="FilterMatcher.cs" />
     <Compile Include="Http\ISyndicationFeedService.cs" />
     <Compile Include="Http\SyndicationFeedService.cs" />
+    <Compile Include="Http\SyndicationFeedXmlReader.cs" />
     <Compile Include="IFeedChecker.cs" />
     <Compile Include="IFilterMatcher.cs" />
     <Compile Include="RssPlugin.cs" />

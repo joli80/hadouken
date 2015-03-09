@@ -21,11 +21,11 @@ namespace Hadouken.Extensions.Rss.Http
         {
             var settings = new XmlReaderSettings
             {
-                DtdProcessing = DtdProcessing.Parse
+                DtdProcessing = DtdProcessing.Parse,
             };
 
             using (var stream = _httpClient.GetStreamAsync(new Uri(url)).Result)
-            using (var reader = XmlReader.Create(stream, settings))
+            using (var reader = XmlReader.Create(new SyndicationFeedXmlReader(stream), settings))
             {
                 return SyndicationFeed.Load(reader);
             }

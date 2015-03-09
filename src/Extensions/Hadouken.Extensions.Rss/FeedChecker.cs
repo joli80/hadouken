@@ -103,18 +103,24 @@ namespace Hadouken.Extensions.Rss
                 }
             }
 
-            var link = item.Links.First().Uri;
+            var link = item.Links.FirstOrDefault(l => l.RelationshipType == "enclosure");
+            if (link == null)
+            {
+                link = item.Links.First();
+            }
 
-            switch (link.Scheme)
+            var uri = link.Uri;
+
+            switch (uri.Scheme)
             {
                 case "http":
                 case "https":
-                    var data = _httpClient.GetByteArrayAsync(item.Links.First().Uri).Result;
-                    _messageBus.Publish(new AddTorrentMessage(data) {Label = args.Label, SavePath = args.SavePath});
+                    var data = _httpClient.GetByteArrayAsync(uri).Result;
+                    _messageBus.Publish(new AddTorrentMessage(data) { Label = args.Label, SavePath = args.SavePath });
                     break;
                 default:
                     // The link is probably a magnet link. Send it directly to Ragnar and let libtorrent sort it out.
-                    _messageBus.Publish(new AddUrlMessage(link.ToString())
+                    _messageBus.Publish(new AddUrlMessage(uri.ToString())
                     {
                         Label = args.Label,
                         SavePath = args.SavePath
